@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using MonoTorrent.Client.Connections;
@@ -56,15 +57,17 @@ namespace MonoTorrent.Client
         }
 
         [Test]
-        [ExpectedException (typeof (InvalidOperationException))]
+        //[ExpectedException (typeof (InvalidOperationException))]
         public void AddPeers_PrivateTorrent ()
         {
+			Assert.Catch<InvalidOperationException>(()=> {
             // You can't manually add peers to private torrents
             var dict = (BEncodedDictionary) rig.TorrentDict["info"];
             dict ["private"] = (BEncodedString) "1";
             Torrent t = Torrent.Load (rig.TorrentDict);
             TorrentManager manager = new TorrentManager (t, "path", new TorrentSettings ());
             manager.AddPeers (new Peer ("id", new Uri ("tcp:://whatever.com")));
+			});
         }
 
         [Test]
@@ -195,7 +198,7 @@ namespace MonoTorrent.Client
         {
             var handle = new ManualResetEvent (false);
             var bf = new BitField (rig.Pieces).Not ();
-            rig.Manager.LoadFastResume (new FastResume (rig.Manager.InfoHash, bf));
+            rig.Manager.LoadFastResume (new FastResume (rig.Manager.InfoHash, bf, rig.Manager.Torrent.Files.Select(f => f.Priority)));
             rig.Manager.TorrentStateChanged += (o, e) => {
                 if (rig.Manager.State == TorrentState.Downloading)
                     handle.Set ();
@@ -216,7 +219,7 @@ namespace MonoTorrent.Client
             });
             var handle = new ManualResetEvent(false);
             var bf = new BitField(rig.Pieces).Not();
-            rig.Manager.LoadFastResume(new FastResume(rig.Manager.InfoHash, bf));
+            rig.Manager.LoadFastResume(new FastResume(rig.Manager.InfoHash, bf, rig.Manager.Torrent.Files.Select(f => f.Priority)));
             rig.Manager.TorrentStateChanged += (o, e) =>
             {
                 if (rig.Manager.State == TorrentState.Downloading)
@@ -243,7 +246,7 @@ namespace MonoTorrent.Client
 
             var handle = new ManualResetEvent(false);
             var bf = new BitField(rig.Pieces).Not();
-            rig.Manager.LoadFastResume(new FastResume(rig.Manager.InfoHash, bf));
+            rig.Manager.LoadFastResume(new FastResume(rig.Manager.InfoHash, bf, rig.Manager.Torrent.Files.Select(f => f.Priority)));
             rig.Manager.TorrentStateChanged += (o, e) =>
             {
                 if (rig.Manager.State == TorrentState.Downloading)

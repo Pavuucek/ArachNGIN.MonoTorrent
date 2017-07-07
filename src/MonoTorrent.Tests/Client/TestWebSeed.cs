@@ -34,7 +34,7 @@ namespace MonoTorrent.Client
         HttpConnection connection;
         HttpListener listener;
         //private RequestMessage m;
-        private string listenerURL = "http://127.0.0.1:120/announce/";
+        private string listenerURL = "http://127.0.0.1:5800/announce/";
         int amountSent;
 
         PeerId id;
@@ -84,20 +84,23 @@ namespace MonoTorrent.Client
         }
 
         [Test]
-        [ExpectedException(typeof(WebException))]
+        //[ExpectedException(typeof(WebException))]
         public void TestPartialData()
         {
             partialData = true;
-            RecieveFirst();
+			Assert.Catch<WebException>(()=>
+            RecieveFirst());
         }
 
         [Test]
-        [ExpectedException(typeof(WebException))]
+        //[ExpectedException(typeof(WebException))]
         public void TestInactiveServer()
         {
             connection.ConnectionTimeout = TimeSpan.FromMilliseconds(100);
+			Assert.Catch<WebException>(()=> { 
             listener.Stop();
             RecieveFirst();
+			});
         }
 
         [Test]
