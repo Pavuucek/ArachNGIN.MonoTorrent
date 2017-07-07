@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>ArachNGIN.MonoTorrent</id>
+        <version>$version$</version>
+        <authors>Michal Kuncl</authors>
+        <owners>Pavuucek</owners>
+        <licenseUrl>https://github.com/Pavuucek/ArachNGIN.MonoTorrent/blob/master/src/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/Pavuucek/ArachNGIN.MonoTorrent</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A fork of MonoTorrent library.</description>
+        <!--copyright>Copyright 2014 BlackJet Software Ltd</copyright-->
+        <!--tags>markdown diagnostics logging pcl</tags-->
+    </metadata>
+    <files>
+        <file src="..\build\MonoTorrent\Release\*.*" target="lib " />
+    </files>
+</package>
